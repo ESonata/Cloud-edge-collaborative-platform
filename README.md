@@ -14,7 +14,7 @@ Spring+SpringMVC+MyBatis
 2.  xxxx
 3.  xxxx
 
-#### 使用说明
+#### 功能描述
 
 1.  xxxx
 2.  xxxx
