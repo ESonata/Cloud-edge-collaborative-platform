@@ -8,7 +8,7 @@
 Spring+SpringMVC+MyBatis
 
 
-#### 安装教程
+#### 人员搭配
 
 1.  xxxx
 2.  xxxx
