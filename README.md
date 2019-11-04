@@ -5,7 +5,7 @@
 或是企业，都能够用码云实现代码托管、项目管理
 
 #### 软件架构
-Spring+SpringMVC+MyBatis
+SSM(Spring+SpringMVC+MyBatis)
 
 
 #### 人员搭配
