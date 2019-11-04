@@ -16,7 +16,7 @@ Spring+SpringMVC+MyBatis
 
 #### 功能描述
 
-1.  xxxx
+1.  售票
 2.  xxxx
 3.  xxxx
 
