@@ -23,13 +23,13 @@
 
 本 框架图解如下：
  
- ![Alt text](https://images2017.cnblogs.com/blog/1322207/201801/1322207-20180127191002115-1771211757.png)
+ ![Alt text](https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1573096262528&di=4cb661cc8a1d7bc0b113f4fe18d27cc9&imgtype=0&src=http%3A%2F%2Fupload.mobiletrain.org%2F2018%2F0920%2F1537433411202.png)
 
 ### 必要条件
-* 操作系统：Windows 10 Pro
-* jdk需求:1.8.0_144
-* 服务器需求：tomcat 9.0
-* 数据库需求：mysql 5.7.18
+   * 操作系统：Windows 10 Pro
+   * jdk需求:1.8.0_144
+   * 服务器需求：tomcat 9.0
+   * 数据库需求：mysql 5.7.18
 ### 项目特点
 
 1.  新用户的注册、登录功能
@@ -141,7 +141,7 @@
 * 内容编辑再发布完成 
 ### 参与贡献
 
-1.  李磊    - ER Diagram Design
+1.  李垒    - ER Diagram Design
 
 2.  孙瑞斌  - Core Developer/Technical Writer
 
@@ -154,6 +154,7 @@
 
 ### 所有项目参与人员（字母顺序排名）
 
+
 1.  李磊  
 
 2.  孙瑞斌
@@ -163,7 +164,6 @@
 4.  闫东琦
 
 5.  张益豪
-
 
 ### 鸣谢
 
