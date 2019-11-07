@@ -141,7 +141,7 @@
 * 内容编辑再发布完成 
 ### 参与贡献
 
-1.  李垒    - ER Diagram Design
+1.  李磊    - ER Diagram Design
 
 2.  孙瑞斌  - Core Developer/Technical Writer
 
@@ -155,7 +155,7 @@
 ### 所有项目参与人员（字母顺序排名）
 
 
-1.  李磊  
+1.  李磊 
 
 2.  孙瑞斌
 

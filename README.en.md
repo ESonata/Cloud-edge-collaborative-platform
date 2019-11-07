@@ -150,7 +150,7 @@ As an example of a change edit to the ticket sales page, you need to perform the
 
 #### All project participants (in alphabetical order)
 
-1.  李磊  
+1.  李垒  
 
 2.  孙瑞斌
 
