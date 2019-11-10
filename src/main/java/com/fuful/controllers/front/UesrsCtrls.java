@@ -1,4 +1,4 @@
-package com.fuful.controllers;
+package com.fuful.controllers.front;
 
 
 import com.fuful.domain.Users;
@@ -20,5 +20,6 @@ public class UesrsCtrls {
         System.out.println(users.getUid());
         return "redirect:/index.jsp";
     }
+
 
 }
