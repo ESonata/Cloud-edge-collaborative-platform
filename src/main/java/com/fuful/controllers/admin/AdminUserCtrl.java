@@ -1,17 +1,14 @@
 package com.fuful.controllers.admin;
 
-import com.fuful.domain.Users;
-import com.fuful.domain.admin.User;
-import com.fuful.service.UsersService;
-import com.fuful.service.admin.UserService;
+import com.fuful.domain.ManageUser;
+import com.fuful.service.admin.AdminUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.HashMap;
-import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
@@ -23,29 +20,30 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 public class AdminUserCtrl {
 
     @Autowired
-    private UserService userService;
+    private AdminUserService adminUserService;
+
 
     @RequestMapping(value = "login.do",method = GET)
     public String test(){
-        return "redirect:/admin/LoginAdmin.jsp";
+        return "redirect:/index.jsp";
     }
 
 
-    @RequestMapping(value="/admin/login",method=GET)
-    public String test(@RequestParam("uname") String uname,@RequestParam("password") String password){
+    //管理员登录
+    @RequestMapping(value="/admin/login",method=POST)
+    public String AdminLogin(@RequestParam("uname") String uname,@RequestParam("password") String password,HttpServletRequest request){
         System.out.println(uname+"aaa"+password);
-
-        User user = userService.login(uname,password);
-
-
-        return "redirect:/admin/index.jsp";
-//        if(user!=null){
-//            return "redirect:/admin/index.jsp";
-//        }
-//        else
-//        {
-//            return "redirect:/admin/LoginAdmin.jsp";
-//        }
+        HttpSession session=request.getSession();
+        ManageUser user = adminUserService.login(uname,password);
+//        return "redirect:/admin/index.jsp";
+        if(user!=null){
+            session.setAttribute("manageuser", user);
+            return "redirect:/admin/index.jsp";
+        }
+        else
+        {
+            return "redirect:/admin/LoginAdmin.jsp";
+        }
     }
 
 }

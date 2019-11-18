@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fuful.dao.admin.ATicketDao">
+
+    <select id="findAllTicket" resultType="com.fuful.domain.Book">
+        select * from tb_book
+    </select>
+
+    <update id="UpdateBookInfo">
+        update  tb_book set typeBID=#{Ticket.typeBID},typeID=#{Ticket.typeID},bookName=#{Ticket.bookName},introduce=#{Ticket.introduce},price=#{Ticket.price},nowPrice=#{Ticket.nowPrice},picture=#{Ticket.picture},INTime=#{Ticket.INTime},newBook=#{Ticket.newBook},sale=#{Ticket.sale},author=#{Ticket.author},publish=#{Ticket.publish} where ID=#{Ticket.ID}
+    </update>
+
+    <delete id="DeleteTicketInfo">
+        delete from tb_book where ID=#{id}
+    </delete>
+
+    <insert id="addTicketDao">
+        insert into tb_book(typeBID,typeID,bookName,introduce,price,nowPrice,picture,INTime,newBook,sale,author) values(
+        #{Ticket.typeBID},#{Ticket.typeID},#{Ticket.bookName},#{Ticket.introduce},#{Ticket.price},#{Ticket.nowPrice},#{Ticket.picture},
+        #{Ticket.INTime},#{Ticket.newBook},#{Ticket.sale},#{Ticket.author})
+
+
+    </insert>
+
+    <select id="findSearchAllTicket" resultType="com.fuful.domain.Book">
+        select * from tb_book where bookName like  CONCAT('%',#{keyword,jdbcType=VARCHAR},'%')
+    </select>
+
+    <select id="findSearchAllTicketByBID" resultType="com.fuful.domain.Book">
+      select * from tb_book,tb_superType where  tb_book.typeBID=tb_superType.ID  and  tb_superType.tname like CONCAT('%',#{keyword,jdbcType=VARCHAR},'%')
+    </select>
+
+
+</mapper>
