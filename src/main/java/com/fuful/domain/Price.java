@@ -5,7 +5,6 @@ package com.fuful.domain;
  */
 public class Price {
 
-
     private int ID;
     private String tid;
     private double price;

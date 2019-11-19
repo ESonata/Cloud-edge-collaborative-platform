@@ -22,5 +22,5 @@ public interface ATicketDao {
     public boolean DeleteTicketPrice(@Param("tid") int  id,@Param("price") Double price);
     public int addTicketDao(@Param("Ticket") Book ticket);
     public Ticket getTicketInfoById(@Param("id") int id);
-    public List<Price> findAllPriceByTid(@Param("tid") String tid);
+    public List<Price> findAllPriceByTid(@Param("tid") String id);
 }

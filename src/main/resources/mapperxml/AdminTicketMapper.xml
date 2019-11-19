@@ -29,6 +29,7 @@
         select * from tb_book where bookName like  CONCAT('%',#{keyword,jdbcType=VARCHAR},'%')
     </select>
 
+
     <select id="findSearchAllTicketByBID" resultType="com.fuful.domain.Book">
       select * from tb_book,tb_superType where  tb_book.typeBID=tb_superType.ID  and  tb_superType.tname like CONCAT('%',#{keyword,jdbcType=VARCHAR},'%')
     </select>

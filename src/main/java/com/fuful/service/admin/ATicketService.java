@@ -43,7 +43,10 @@ public class ATicketService {
         Ticket p = ticketDao.getTicketInfoById(id);
 //			PreparedStatement ps = conn.prepareStatement("select * from tb_book where ID=? ");
         return p;
+
     }
+
+
 
 
 

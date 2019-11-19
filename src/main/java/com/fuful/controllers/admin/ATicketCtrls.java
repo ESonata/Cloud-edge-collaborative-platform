@@ -409,7 +409,8 @@ public class ATicketCtrls {
                         for(Book p:booklist)
                         {
                             AticketService.saveBookInfo(p);
-                            System.out.println("导入excel表格"+" "+p.getTypeBID()+" "+p.getBookName());
+                            System.out.println("导入excel表格为"+" "+p.getTypeBID()+" "+p.getBookName());
+
                         }
 
 
