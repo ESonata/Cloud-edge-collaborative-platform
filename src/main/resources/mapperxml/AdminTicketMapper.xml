@@ -17,9 +17,14 @@
         DELETE  from tb_price where tid=#{tid} and price=#{price}
     </delete>
 
+    <delete id="DeleteTicketPlace">
+        DELETE from tb_city where tid=#{tid} and city=#{place}
+    </delete>
+
     <insert id="addTicketDao">
         insert into tb_book(typeBID,typeID,bookName,introduce,price,nowPrice,picture,INTime,newBook,sale,author) values(
-        #{Ticket.typeBID},#{Ticket.typeID},#{Ticket.bookName},#{Ticket.introduce},#{Ticket.price},#{Ticket.nowPrice},#{Ticket.picture},
+        #{Ticket.typeBID},#{Tic
+        ket.typeID},#{Ticket.bookName},#{Ticket.introduce},#{Ticket.price},#{Ticket.nowPrice},#{Ticket.picture},
         #{Ticket.INTime},#{Ticket.newBook},#{Ticket.sale},#{Ticket.author})
 
 
@@ -47,5 +52,15 @@
         SELECT * from tb_price where tid=#{tid}
 
     </select>
+
+    <select id="findAllPlaceByTid" resultType="com.fuful.domain.City">
+
+        SELECT * from tb_city where tid=#{tid}
+
+    </select>
+
+    <insert id="AddTicketPlace">
+        insert into tb_city VALUES (#{tid},#{city})
+    </insert>
 
 </mapper>

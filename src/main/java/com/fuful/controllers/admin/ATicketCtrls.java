@@ -1,9 +1,6 @@
 package com.fuful.controllers.admin;
 
-import com.fuful.domain.Book;
-import com.fuful.domain.BookSuperType;
-import com.fuful.domain.Price;
-import com.fuful.domain.Ticket;
+import com.fuful.domain.*;
 import com.fuful.service.BookService;
 import com.fuful.service.admin.ATicketService;
 import com.fuful.service.admin.ExcelService;
@@ -18,6 +15,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import sun.lwawt.macosx.CImage;
 
 
 import javax.servlet.ServletException;
@@ -467,8 +465,10 @@ public class ATicketCtrls {
         session.setAttribute("TicketInfo", TicketInfo);  //保存的所有图书信息
 
         List<Price> priceList=AticketService.getPriceList(request.getParameter("ID"));
+        List<City> placeList=AticketService.getPlaceList(request.getParameter("ID"));
 
         session.setAttribute("priceList",priceList);
+        session.setAttribute("placeList",placeList);
 
 
         System.out.println("RUN="+priceList.get(0).getId());
@@ -516,5 +516,38 @@ public class ATicketCtrls {
         response.setContentType("text/html;charset=UTF-8");
         response.getWriter().write(json);
 
+    }
+
+
+
+    @RequestMapping(value = "/deletePlace",method = POST)
+    public void deletePlace(HttpServletRequest request,HttpServletResponse response) throws IOException {
+        HttpSession session=request.getSession();
+        String tid=request.getParameter("tid");
+        String place=request.getParameter("place");
+        boolean res=AticketService.deleteTicketPlace(tid,place);
+        String message="";
+        Gson gson=new Gson();
+        String json=gson.toJson(message);
+        response.setContentType("text/html;charset=UTF-8");
+        response.getWriter().write(json);
+
+    }
+
+
+    @RequestMapping(value = "/AddTicketPlace",method = POST)
+    public void AddTicketPlace(HttpServletRequest request,HttpServletResponse response) throws IOException {
+
+        String place=request.getParameter("place");
+        String tid=request.getParameter("tid");
+        int res= AticketService.addTicketPlace(tid,place);
+
+        String message="success";
+
+
+        Gson gson=new Gson();
+        String json=gson.toJson(message);
+        response.setContentType("text/html;charset=UTF-8");
+        response.getWriter().write(json);
     }
 }

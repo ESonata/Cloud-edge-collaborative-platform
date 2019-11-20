@@ -2,6 +2,7 @@ package com.fuful.service.admin;
 
 import com.fuful.dao.admin.ATicketDao;
 import com.fuful.domain.Book;
+import com.fuful.domain.City;
 import com.fuful.domain.Price;
 import com.fuful.domain.Ticket;
 import com.github.pagehelper.PageHelper;
@@ -27,14 +28,27 @@ public class ATicketService {
         boolean res=ticketDao.DeleteTicketPrice(tid,price);
         return res;
     }
+    public boolean deleteTicketPlace(String tid,String place){
+        boolean res=ticketDao.DeleteTicketPlace(tid,place);
+        return res;
+    }
 
     public List<Price> getPriceList(String tid){
         List<Price> list=ticketDao.findAllPriceByTid(tid);
+        return list;
+    }
 
+    public List<City> getPlaceList(String tid){
+        List<City> list=ticketDao.findAllPlaceByTid(tid);
         return list;
     }
     public int addTicketPrice(String tid,Double price){
         int res=ticketDao.AddTicketPrice(tid,price);
+        return res;
+    }
+
+    public int addTicketPlace(String tid,String  place){
+        int res=ticketDao.AddTicketPlace(tid,place);
         return res;
     }
 

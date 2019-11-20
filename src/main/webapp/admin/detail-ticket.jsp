@@ -5,6 +5,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html lang="zh-CN">
 <head>
+
     <meta charset="utf-8">
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -178,30 +179,47 @@
                             <li><a  data-toggle="modal" data-target="#showPrice" >查看票价档次</a></li>
                         </button>
                         <button type="submit" class="btn btn-default" style="display: inline">
-                            <%--<li><a  data-toggle="modal" data-target="#addPrice">增加举办城市</a></li>--%>
+                            <li><a  data-toggle="modal" data-target="#addCity">增加举办城市</a></li>
                         </button>
                         <button type="submit" class="btn btn-default" style="display: inline">
-                            <%--<li><a  data-toggle="modal" data-target="#addPrice">查看举报城市</a></li>--%>
+                            <li><a  data-toggle="modal" data-target="#showPlace">查看举办城市</a></li>
+                        </button>
+
+                        <button type="submit" class="btn btn-default" style="display: inline">
+                            <a onclick="getMap()">获取坐标</a>
                         </button>
 
                     </div>
 
-                    <%--<script type="text/javascript">--%>
-                        <%--function showPrice() {--%>
-                            <%--$.post(--%>
-                                <%--"/GetPrice.do",--%>
-                                <%--{"tid":${TicketInfo.ID}},--%>
-                                <%--function(data)--%>
-                                <%--{--%>
+                    <script type="text/javascript">
+                        function getMap() {
+//                            $.get(
+//                                "https://restapi.amap.com/v3/geocode/geo?address=北京市朝阳区阜通东大街6号&output=json&key=da3f89f7c685285905e53d03ba5e4482",
+//                                {},
+//                                function(data)
+//                                {
+//
+//                                  console.log(data)
+//
+//                                },
+//                                "json"
+//                            )
 
-                                    <%--$('#showPrice').modal('show');--%>
+                            alert("111")
+                            $.ajax({
+                                type: 'GET',
+                                dataType:'jsonp',
+                                url: 'http://api.asilu.com/weather/?callback=getname&city=深圳',
+                                success: function(data){
+                                    var reslutData=data;
+                                    console.log(reslutData);
 
-                                <%--},--%>
-                                <%--"json"--%>
-                            <%--)--%>
+                                }
+                            })
 
-                        <%--}--%>
-                    <%--</script>--%>
+
+                        }
+                    </script>
 
                     <br>
 
@@ -484,6 +502,162 @@
 
 
 
+
+<%--增加票务城市模态框--%>
+<div class="modal fade" id="addCity" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" style="margin-top: 80px"  >
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" >新增票务举办地点</h4>
+            </div>
+            <div class="modal-body" style="margin-top: 10px">
+
+                <table class="table" style="margin-bottom:0px;">
+                    <thead>
+                    <tr>
+                        <td wdith="20%">票务名称:</td>
+                        <td width="80%">
+                            <input type="text" value="${TicketInfo.ticketName}" readonly  class="form-control" name="votename" maxlength="10" autocomplete="off" />
+                        </td>
+                    </tr>
+
+
+                    </thead>
+                    <tbody >
+
+                    <tr>
+                        <td wdith="20%">举办地点:</td>
+                        <td width="80%"><input type="text" value="" id="ticketPlace"  class="form-control" name="ticketPrice" maxlength="10" autocomplete="off" /></td>
+                    </tr>
+                    </tbody>
+                    <tfoot>
+                    <tr></tr>
+                    </tfoot>
+                </table>
+
+
+            </div>
+            <div class="modal-footer">
+                <button  onclick="addPlace()" type="button" class="btn btn-default">增加</button>
+            </div>
+
+
+
+            <script type="text/javascript">
+
+                function addPlace()
+                {
+                    var place=$("#ticketPlace").val();
+                    if(place == '' || place == undefined || place == null){
+                        return
+                    }
+                    $.post(
+                        "/AddTicketPlace",
+                        {"tid":${TicketInfo.ID},"place":place},
+                        function(data)
+                        {
+
+                                $('#addCity').modal('hide');
+                                window.location.href="/ShowBookInfo?ID="+${TicketInfo.ID};
+
+                        },
+                        "json"
+                    )
+                }
+
+            </script>
+
+        </div>
+
+    </div>
+</div>
+
+
+
+<%--查看票务举办地点模态框--%>
+<div class="modal fade" id="showPlace" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" style="margin-top: 80px"  >
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" >票务举办地点查看</h4>
+            </div>
+            <div class="modal-body" style="margin-top: 10px">
+
+                <table class="table" style="margin-bottom:0px;">
+                    <thead>
+                    <tr>
+                        <td wdith="20%">票务名称:</td>
+                        <td width="80%">
+                            <input type="text" value="${TicketInfo.ticketName}" readonly  class="form-control" name="votename" maxlength="10" autocomplete="off" />
+                        </td>
+                    </tr>
+
+                    </thead>
+                    <tbody >
+
+                    <c:forEach items="${placeList}" var="p">
+                        <tr>
+                            <td wdith="20%">举办地点:</td>
+                            <td width="60%">
+                                <input type="text" value="${p.city}" readonly  class="form-control" name="votename" maxlength="10" autocomplete="off" />
+
+
+                            </td>
+                            <td>
+                                <button class="btn btn-default" tid="${p.tid}" place="${p.city}" onclick="deletePlace(this)" style="display: inline;"> 删除</button>
+                            </td>
+
+                        </tr>
+
+                    </c:forEach>
+                    </tbody>
+                    <tfoot>
+                    <tr></tr>
+                    </tfoot>
+                </table>
+
+
+                <script type="text/javascript">
+                    function deletePlace(obj) {
+
+                        var r=confirm("确定要删除吗？");
+                        if (r==true)
+                        {
+                            var tid=$(obj).attr("tid");
+                            var place=$(obj).attr("place");
+                            $.ajax({
+                                type: "POST",
+                                url: "/deletePlace",
+                                data: {"tid":tid,"place":place},
+                                cache: false, //不缓存此页面
+                                success: function (data) {
+
+
+                                    window.location.href="/ShowBookInfo?ID="+${TicketInfo.ID};
+
+
+                                }
+                            });
+                        }
+                        else
+                        {
+                            document.write("Cancel!")
+                        }
+
+
+
+                    }
+                </script>
+            </div>
+
+
+
+        </div>
+
+    </div>
+</div>
 
 
 
