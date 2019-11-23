@@ -61,4 +61,15 @@
     <select id="findAllPriceByLRT" resultType="com.fuful.domain.Round">
         SELECT * from tb_time where tid=#{tid} and city=#{city} and round=#{round}
     </select>
+    
+    
+    
+    <select id="findTownInfoList" resultType="com.fuful.domain.TownInfo">
+        select * from tb_towninfo
+    </select>
+    
+    
+    <select id="findTicketListByTown" resultType="com.fuful.domain.City">
+        select * from tb_city where city like  CONCAT('%',#{town,jdbcType=VARCHAR},'%')
+    </select>
 </mapper>

@@ -139,33 +139,37 @@ public class IndexCtrl {
 ////        System.out.println("前端图书列表分页显示totalPage："+sp.getTotalpage());
         System.out.println("前端图书列表分页显示totalCount："+list.getPageNum()+" "+list.getPages()+" "+list.getTotal());
         session.setAttribute("totalPage", list.getPages());
-        session
-                .setAttribute("totalCount", list.getTotal());
+        session.setAttribute("totalCount", list.getTotal());
         session.setAttribute("currentPage", list.getPageNum());
         session.setAttribute("cid", cid);
+        session.removeAttribute("subtypeFlag");
         //定义一个记录历史商品信息的集合
         List<Ticket> historyProductList = new ArrayList<Ticket>();
 
 ////        获得客户端携带名字叫pids的cookie
-//        Cookie[] cookies = request.getCookies();
-//        if(cookies!=null){
-//            for(Cookie cookie:cookies){
-//                if("pids".equals(cookie.getName())){
-//                    String pids = cookie.getValue();//3-2-1
-//                    String[] split = pids.split("-");
-//                    for(String pid : split){
-//                        Book pro = ticketService.findTicketInfoById(Integer.parseInt(pid));
-//                        historyProductList.add(pro);
-//                    }
-//                }
-//            }
-//        }
+        Cookie[] cookies = request.getCookies();
+        if(cookies!=null){
+            for(Cookie cookie:cookies){
+                if("pids".equals(cookie.getName())){
+                    String pids = cookie.getValue();//3-2-1
+                    String[] split = pids.split("-");
+                    for(String pid : split){
+                        Ticket pro = ticketService.findTicketInfoById(Integer.parseInt(pid));
+                        historyProductList.add(pro);
+                    }
+                }
+            }
+        }
+
+
 
         //将历史记录的集合放到域中
         request.setAttribute("historyProductList", historyProductList);
 
-        res.put("data",list);
-//        return res;
+
+        List<TownInfo> townInfoList=ticketService.getTownInfoList();
+        System.out.println(townInfoList.get(0).getTown());
+        session.setAttribute("townInfoList",townInfoList);
         return "redirect:/front/product_list.jsp";
     }
 
@@ -355,5 +359,75 @@ public class IndexCtrl {
         response.getWriter().write(json);
 
 
+    }
+
+    @RequestMapping(value = "/ProductSubTypeListServlet",method = GET)
+    public void ProductSubTypeListServlet(HttpServletRequest request,HttpServletResponse response) throws ServletException, IOException {
+
+        String towninfo=request.getParameter("ID");
+        String LiId=request.getParameter("liId");
+
+        String moreInfoFlag=request.getParameter("moreInfoFLag");
+
+        String currentPageStr = request.getParameter("currentPage");
+        if(currentPageStr==null) currentPageStr="1";
+        int currentPage = Integer.parseInt(currentPageStr);
+
+        HttpSession session = request.getSession();
+
+        if(moreInfoFlag!=null){
+            session.setAttribute("showmoreInfo","1");
+        }
+        else
+        {
+            session.setAttribute("showmoreInfo","0");
+        }
+
+        PageInfo<City> tidList =ticketService.getTicketListByTown(currentPage,12,towninfo);
+
+        List<Ticket>  ticketList=new ArrayList<>();
+
+        for(City p:tidList.getList()){
+            Ticket ticket=new Ticket();
+            ticket=ticketService.findTicketInfoById(p.getTid());
+            ticket.setPlace(p.getCity());
+            ticketList.add(ticket);
+        }
+
+        System.out.println("TICKETLIST="+ticketList.size());
+
+        session.setAttribute("subtypeFlag", towninfo);
+//
+        session.setAttribute("SpliteBookList", ticketList);
+        request.setAttribute("currentPage", tidList.getPageNum());
+        request.setAttribute("totalPage", tidList.getPages());
+        request.setAttribute("totalCount",tidList.getTotal());
+//
+
+
+
+        //定义一个记录历史商品信息的集合
+        List<Ticket> historyProductList = new ArrayList<Ticket>();
+
+//        //获得客户端携带名字叫pids的cookie
+//        Cookie[] cookies = request.getCookies();
+//        if(cookies!=null){
+//            for(Cookie cookie:cookies){
+//                if("pids".equals(cookie.getName())){
+//                    String pids = cookie.getValue();//3-2-1
+//                    String[] split = pids.split("-");
+//                    for(String pid : split){
+//                        Book pro = service.findBookInfoById(Integer.parseInt(pid));
+//                        historyProductList.add(pro);
+//                    }
+//                }
+//            }
+//        }
+
+        //将历史记录的集合放到域中
+        request.setAttribute("historyProductList", historyProductList);
+
+        session.setAttribute("li_id",LiId);
+        request.getRequestDispatcher("/front/product_list.jsp").forward(request, response);
     }
 }

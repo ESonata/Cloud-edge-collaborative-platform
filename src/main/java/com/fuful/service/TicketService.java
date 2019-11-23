@@ -20,6 +20,20 @@ public class TicketService {
     @Autowired
     TicketDao ticketDao;
 
+    public PageInfo<City> getTicketListByTown(int pageNum, int pageSize, String town){
+        PageHelper.startPage(pageNum,pageSize);
+        List<City> ticketList = ticketDao.findTicketListByTown(town);
+        PageInfo<City> data = new PageInfo<>(ticketList);
+        return data;
+    }
+
+
+
+    public List<TownInfo> getTownInfoList(){
+        List<TownInfo> townInfoList=ticketDao.findTownInfoList();
+        return townInfoList;
+    }
+
     public List<Price> getPriceByTid(String tid){
         List<Price> priceList=ticketDao.findAllPriceByTid(tid);
         return priceList;
@@ -52,44 +66,6 @@ public class TicketService {
 //		// TODO Auto-generated method stub
 //		Connection conn = JNDISessionFactory.getConnection();
 		List<Book> plist = ticketDao.findAllNewBook();
-//		try {
-//			PreparedStatement ps = conn.prepareStatement("select * from tb_book  order by INTime desc limit 0,9");
-//			ResultSet rs = ps.executeQuery();
-////			private int ID;		  //图书ID
-////			private int typeBID;  //大类
-////			private int typeID;   //小类别
-////			private String bookName; //图书名称
-////			private String introduce;  //图书简介
-////			private Double price;	//定价
-////			private Double nowPrice; //现价
-////			private String picture; //图片文件
-////			private Date   INTime; //录入时间
-////			private int newBook;  //是否是新书，1是，0不是
-////			private int sale;    //是否是打折，1是，0不是
-////			private int hit;    //浏览次数
-//			while(rs.next()){
-//				Book p = new Book();
-//				p.setID(rs.getInt("ID"));
-//				p.setTypeBID(rs.getInt("typeBID"));
-//				p.setTypeID(rs.getInt("typeID"));
-//				p.setBookName(rs.getString("bookName"));
-//				p.setIntroduce(rs.getString("introduce"));
-//				p.setPrice(rs.getDouble("price"));
-//				p.setNowPrice(rs.getDouble("nowPrice"));
-//				p.setPicture(rs.getString("picture"));
-//				p.setINTime(rs.getString("INTime"));
-//				p.setNewBook(rs.getInt("newBook"));
-//				p.setSale(rs.getInt("sale"));
-//				p.setHit(rs.getInt("hit"));
-//				plist.add(p);
-//			}
-//
-//		JNDISessionFactory.close(rs, ps, conn);
-//
-//		} catch (SQLException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
 		return plist;
 	}
 
@@ -98,27 +74,6 @@ public class TicketService {
     public List<BookSuperType> findAllSuperType() {
         // TODO Auto-generated method stub
         List<BookSuperType> plist = ticketDao.findSuperType();
-//		try {
-//			PreparedStatement ps = conn.prepareStatement("select * from tb_superType ");
-//			ResultSet rs = ps.executeQuery();
-//
-//			while(rs.next()){
-//				BookSuperType p=new BookSuperType();
-//
-//				p.setID(rs.getInt("ID"));
-//				p.setTname(rs.getString("tname"));
-//				p.setAname(rs.getString("aname"));
-//				p.setKeyword(rs.getString("keyword"));
-//				p.setSupdesc(rs.getString("supdesc"));
-//				plist.add(p);
-//			}
-//
-//		JNDISessionFactory.close(rs, ps, conn);
-//
-//		} catch (SQLException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
         return plist;
     }
 

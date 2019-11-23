@@ -27,4 +27,6 @@ public interface TicketDao {
     public List<Round> findRoundByPlace(@Param("tid") String tid,@Param("city") String city);
     public List<Price> findAllPriceByTid(@Param("tid") String tid);
     public List<Round> findAllPriceByLRT(@Param("tid") String tid,@Param("city") String city,@Param("round") String round);
+    public List<TownInfo> findTownInfoList();
+    public List<City> findTicketListByTown(@Param("town") String town);
 }
