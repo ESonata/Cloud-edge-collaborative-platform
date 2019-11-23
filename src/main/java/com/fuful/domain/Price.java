@@ -5,7 +5,7 @@ package com.fuful.domain;
  */
 public class Price {
 
-    private int ID;
+    private int id;
     private String tid;
     private double price;
 
@@ -27,11 +27,11 @@ public class Price {
     }
 
     public int getId() {
-        return ID;
+        return id;
     }
 
     public void setId(int id) {
-        this.ID = id;
+        this.id = id;
     }
 
 

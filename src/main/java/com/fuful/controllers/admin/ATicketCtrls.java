@@ -1,7 +1,7 @@
 package com.fuful.controllers.admin;
 
 import com.fuful.domain.*;
-import com.fuful.service.BookService;
+import com.fuful.service.TicketService;
 import com.fuful.service.admin.ATicketService;
 import com.fuful.service.admin.ExcelService;
 import com.github.pagehelper.PageInfo;
@@ -10,12 +10,10 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
-import org.apache.ibatis.annotations.Param;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import sun.lwawt.macosx.CImage;
 
 
 import javax.servlet.ServletException;
@@ -40,7 +38,7 @@ public class ATicketCtrls {
     ATicketService AticketService;
 
     @Autowired
-    BookService bookService;
+    TicketService ticketService;
     @RequestMapping(value = "/AdminGetInitBookInfoServlet",method = GET)
     public void AdminGetInitBookInfoServlet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
@@ -54,17 +52,17 @@ public class ATicketCtrls {
             page=Integer.parseInt(request.getParameter("curPage"));
         }
 
-        PageInfo<Book> ticketList =AticketService.getTicketList(page,7);
+        PageInfo<Ticket> ticketList =AticketService.getTicketList(page,7);
 
-        List<Book> tickets=ticketList.getList();
-        List<Book> new_ticketList=new ArrayList<>();
+        List<Ticket> tickets=ticketList.getList();
+        List<Ticket> new_ticketList=new ArrayList<>();
 
-        for(Book p:tickets){
-            String  superTypename=bookService.findSuperTypeName(p.getTypeBID());
+        for(Ticket p:tickets){
+            String  superTypename= ticketService.findSuperTypeName(p.getTypeBID());
             p.setTypeBIDName(superTypename);
             new_ticketList.add(p);
         }
-        List<BookSuperType>  categoryplist=bookService.findAllSuperType();
+        List<BookSuperType>  categoryplist= ticketService.findAllSuperType();
 
         HttpSession session = request.getSession();
         session.removeAttribute("searchflag");
@@ -93,25 +91,25 @@ public class ATicketCtrls {
 //		找到该子栏目的信息
 
 
-        Book  showBookInfo=(Book)bookService.findBookInfoById(id);
+        Ticket  showTicketInfo=(Ticket) ticketService.findTicketInfoById(id);
 
-        System.out.println("该图书的录入时间为:"+showBookInfo.getINTime());
-        System.out.println("该图书是否为新书:"+showBookInfo.getNewBook());
-        System.out.println("该图书的父栏目为:"+showBookInfo.getTypeBID());
-        System.out.println("该图书的子栏目为:"+showBookInfo.getTypeID());
+        System.out.println("该图书的录入时间为:"+showTicketInfo.getINTime());
+        System.out.println("该图书是否为新书:"+showTicketInfo.getNewTicket());
+        System.out.println("该图书的父栏目为:"+showTicketInfo.getTypeBID());
+        System.out.println("该图书的子栏目为:"+showTicketInfo.getTypeID());
 //		根据主栏目和子栏目的ID查询他的名称
 
-        String  showBookInfoSuperType=bookService.findSuperTypeName(showBookInfo.getTypeBID());
+        String  showTicketInfoSuperType= ticketService.findSuperTypeName(showTicketInfo.getTypeBID());
 
 
 
-        if(showBookInfoSuperType==null)
+        if(showTicketInfoSuperType==null)
         {
-            showBookInfoSuperType="无";
+            showTicketInfoSuperType="无";
         }
 
-        session.setAttribute("showBookInfoSuperType", showBookInfoSuperType);//显示父栏目名称
-        session.setAttribute("showBookInfo", showBookInfo);  //保存的所有图书信息
+        session.setAttribute("showBookInfoSuperType", showTicketInfoSuperType);//显示父栏目名称
+        session.setAttribute("showBookInfo", showTicketInfo);  //保存的所有图书信息
 
         response.sendRedirect("/admin/update-ticket.jsp");
     }
@@ -141,23 +139,23 @@ public class ATicketCtrls {
         int newBook=Integer.parseInt(request.getParameter("newBook"));
         int sale=Integer.parseInt(request.getParameter("sale"));
         String picture=request.getParameter("picture");
-
+        String amount=request.getParameter("amount");
         String	INTime = request.getParameter("INTime");
         String message="";
-        Book p=new Book();
+        Ticket p=new Ticket();
         p.setID(id);
         p.setTypeBID(typeBID);
         p.setTypeID(0);
-        p.setBookName(bookName);
+        p.setTicketName(bookName);
         p.setIntroduce(introduce);
         p.setPrice(price);
         p.setNowPrice(nowPrice);
         p.setPicture(picture);
         p.setINTime(INTime);
-        p.setNewBook(newBook);
+        p.setNewTicket(newBook);
         p.setSale(sale);
         p.setAuthor(author);
-        p.setPublish("");
+        p.setAmount(amount);
 
         int msg=AticketService.updateBookInfo(p);
 
@@ -175,7 +173,6 @@ public class ATicketCtrls {
 
         int getid=(int) session.getAttribute("thisBookInfoId");
 
-        System.out.println("getid is ....."+getid);
         Gson gson=new Gson();
         String json=gson.toJson(message);
 
@@ -192,7 +189,7 @@ public class ATicketCtrls {
         System.out.println("delete bookinfo want to is:"+id);
 
 
-        BookService service=new BookService();
+        TicketService service=new TicketService();
         String message="";
 
         boolean msg=AticketService.deleteBookInfoByID(id);
@@ -236,10 +233,12 @@ public class ATicketCtrls {
             nowPrice=0.0;
         }
 
+
         String introduce=request.getParameter("introduce");
         String author=request.getParameter("author");
         String publish=request.getParameter("publish");
         int newBook=Integer.parseInt(request.getParameter("newBook"));
+        String  amount=request.getParameter("amount");
         int sale=Integer.parseInt(request.getParameter("sale"));
         String picture=request.getParameter("picture");
 
@@ -248,39 +247,38 @@ public class ATicketCtrls {
         String	INTime = request.getParameter("INTime");
         String message="";
 //		先判断数据库是否有相同数据
-        BookService service=new BookService();
 //        boolean judge=AticketService.findBookInfoExist(bookName);
         boolean judge=false;
         if(judge==true)
         {
-            message="图书名称已经存在,请重新输入!";
+            message="票务已经存在,请重新输入!";
         }
         else
         {
 
-            Book p=new Book();
+            Ticket p=new Ticket();
             p.setTypeBID(typeBID);
             p.setTypeID(0);
-            p.setBookName(bookName);
+            p.setTicketName(bookName);
             p.setIntroduce(introduce);
             p.setPrice(price);
             p.setNowPrice(nowPrice);
             p.setPicture(picture);
             p.setINTime(INTime);
-            p.setNewBook(newBook);
+            p.setNewTicket(newBook);
             p.setSale(sale);
             p.setAuthor(author);
-            p.setPublish(publish);
+            p.setAmount(amount);
 
             int msg=AticketService.saveBookInfo(p);
 
             if(msg>0)
             {
-                message="恭喜您:图书信息添加成功!";
+                message="恭喜您:票务信息添加成功!";
             }
             else
             {
-                message="请检查输入信息:图书信息添加失败!";
+                message="请检查输入信息:票务信息添加失败!";
             }
         }
 
@@ -310,13 +308,13 @@ public class ATicketCtrls {
             System.out.println("搜索的关键字是:"+bookeyword);
             HttpSession session=request.getSession();
 
-            PageInfo<Book> ticketList =AticketService.getSearchTicketList(page,7,bookeyword);
+            PageInfo<Ticket> ticketList =AticketService.getSearchTicketList(page,7,bookeyword);
 
-            List<Book> tickets=ticketList.getList();
-            List<Book> new_ticketList=new ArrayList<>();
+            List<Ticket> tickets=ticketList.getList();
+            List<Ticket> new_ticketList=new ArrayList<>();
 
-            for(Book p:tickets){
-                String  superTypename=bookService.findSuperTypeName(p.getTypeBID());
+            for(Ticket p:tickets){
+                String  superTypename= ticketService.findSuperTypeName(p.getTypeBID());
                 p.setTypeBIDName(superTypename);
                 new_ticketList.add(p);
             }
@@ -345,13 +343,13 @@ public class ATicketCtrls {
 
 
 
-            PageInfo<Book> ticketList =AticketService.getSearchTicketListByBID(page,7,bookeyword);
+            PageInfo<Ticket> ticketList =AticketService.getSearchTicketListByBID(page,7,bookeyword);
 
-            List<Book> tickets=ticketList.getList();
-            List<Book> new_ticketList=new ArrayList<>();
+            List<Ticket> tickets=ticketList.getList();
+            List<Ticket> new_ticketList=new ArrayList<>();
 
-            for(Book p:tickets){
-                String  superTypename=bookService.findSuperTypeName(p.getTypeBID());
+            for(Ticket p:tickets){
+                String  superTypename= ticketService.findSuperTypeName(p.getTypeBID());
                 p.setTypeBIDName(superTypename);
                 new_ticketList.add(p);
             }
@@ -387,7 +385,7 @@ public class ATicketCtrls {
 
     @RequestMapping(value = "/ImportExcelServlet",method = POST)
     public void ImportExcelServlet(HttpServletRequest request,HttpServletResponse response) throws ServletException, IOException {
-        List<Book> booklist=new ArrayList();
+        List<Ticket> booklist=new ArrayList();
         if(ServletFileUpload.isMultipartContent(request))
         {
             ServletFileUpload upload=new ServletFileUpload(new DiskFileItemFactory());
@@ -402,12 +400,12 @@ public class ATicketCtrls {
                         ExcelService service=new ExcelService();
                         booklist=service.imp(fileitem.getName());
 
-                        BookService bookservice=new BookService();
+                        TicketService bookservice=new TicketService();
 
-                        for(Book p:booklist)
+                        for(Ticket p:booklist)
                         {
                             AticketService.saveBookInfo(p);
-                            System.out.println("导入excel表格为"+" "+p.getTypeBID()+" "+p.getBookName());
+                            System.out.println("导入excel表格为"+" "+p.getTypeBID()+" "+p.getTicketName());
 
                         }
 
@@ -437,7 +435,7 @@ public class ATicketCtrls {
     @RequestMapping(value = "/ExportExcelServlet",method = POST)
     public void exportExcel(HttpServletRequest request,HttpServletResponse response) throws IOException {
 
-        List<Book>  booklist=AticketService.getAllTicket();
+        List<Ticket>  booklist=AticketService.getAllTicket();
 
         ExcelService service=new ExcelService();
         Workbook workbook=service.export(true,booklist);
@@ -454,7 +452,7 @@ public class ATicketCtrls {
         HttpSession session=request.getSession();
         int Id=Integer.parseInt(request.getParameter("ID"));
         Ticket TicketInfo=AticketService.findTicketInfoById(Id);
-        String  showTicketInfoSuperType=bookService.findSuperTypeName(TicketInfo.getTypeBID());
+        String  showTicketInfoSuperType= ticketService.findSuperTypeName(TicketInfo.getTypeBID());
 
         if(showTicketInfoSuperType==null)
         {
@@ -466,12 +464,13 @@ public class ATicketCtrls {
 
         List<Price> priceList=AticketService.getPriceList(request.getParameter("ID"));
         List<City> placeList=AticketService.getPlaceList(request.getParameter("ID"));
+        List<Round> roundList=AticketService.getRoundList(request.getParameter("ID"));
 
         session.setAttribute("priceList",priceList);
         session.setAttribute("placeList",placeList);
+        session.setAttribute("roundList",roundList);
 
 
-        System.out.println("RUN="+priceList.get(0).getId());
         return "redirect:/admin/detail-ticket.jsp";
     }
 
@@ -534,13 +533,27 @@ public class ATicketCtrls {
 
     }
 
+    @RequestMapping(value = "/deleteRound",method = POST)
+    public void deleteRound(HttpServletRequest request,HttpServletResponse response) throws IOException {
+        HttpSession session=request.getSession();
+        String id=request.getParameter("id");
+        boolean res=AticketService.deleteRound(Integer.parseInt(id));
+        String message="";
+        Gson gson=new Gson();
+        String json=gson.toJson(message);
+        response.setContentType("text/html;charset=UTF-8");
+        response.getWriter().write(json);
+
+    }
+
 
     @RequestMapping(value = "/AddTicketPlace",method = POST)
     public void AddTicketPlace(HttpServletRequest request,HttpServletResponse response) throws IOException {
 
         String place=request.getParameter("place");
         String tid=request.getParameter("tid");
-        int res= AticketService.addTicketPlace(tid,place);
+        String location=request.getParameter("location");
+        int res= AticketService.addTicketPlace(tid,place,location);
 
         String message="success";
 
@@ -550,4 +563,21 @@ public class ATicketCtrls {
         response.setContentType("text/html;charset=UTF-8");
         response.getWriter().write(json);
     }
+
+    @RequestMapping(value = "/addPlaceTime",method = POST)
+    public  void addPlaceTime(HttpServletRequest request,HttpServletResponse response) throws IOException {
+        String cityId=request.getParameter("cityId");
+        String time=request.getParameter("time");
+        String tid=request.getParameter("tid");
+        int res= AticketService.addPlaceTime(cityId,time,tid);
+        String message="success";
+
+
+        Gson gson=new Gson();
+        String json=gson.toJson(message);
+        response.setContentType("text/html;charset=UTF-8");
+        response.getWriter().write(json);
+    }
+
+
 }

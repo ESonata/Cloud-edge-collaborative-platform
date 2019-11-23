@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fuful.dao.TicketDao">
+    <select id="findHotBook" resultType="com.fuful.domain.Book">
+      select * from tb_book  order by hit desc limit 0,9
+    </select>
+
+    <select id="findSuperType" resultType="com.fuful.domain.BookSuperType">
+        select * from tb_superType
+    </select>
+
+    <select id="findProductByCid" resultType="com.fuful.domain.Ticket">
+         select * from tb_ticket where typeBID = #{cid}
+    </select>
+    <select id="getTicketInfoById" resultType="com.fuful.domain.Ticket">
+        select * from tb_ticket where ID=#{id}
+    </select>
+
+    <update id="addTicketHit">
+        update  tb_ticket set hit=#{hit} where ID=#{id}
+    </update>
+
+    <select id="getSuperTypeName" resultType="string">
+        select tname from tb_superType where ID=#{id}
+    </select>
+
+
+    <select id="findMarkList" resultType="com.fuful.domain.Mark">
+        select * from tb_mark where bid=#{pid}
+    </select>
+
+    <select id="findMyMarkList" resultType="com.fuful.domain.Mark">
+        select * from tb_mark where uname=#{username}
+    </select>
+
+    <delete id="DeleteMark">
+        delete from tb_mark where mid=#{mid}
+    </delete>
+
+
+    <select id="findAllNewBook" resultType="com.fuful.domain.Book">
+        select * from tb_book  order by INTime desc limit 0,9
+    </select>
+
+    <select id="findAllDiscountBook" resultType="com.fuful.domain.Book">
+        select * from tb_book   where sale=1 order by hit desc limit 0,9
+    </select>
+
+    <select id="findAllPlaceByTid" resultType="com.fuful.domain.City">
+        select * from tb_city where tid=#{tid}
+    </select>
+
+    <select id="findRoundByPlace" resultType="com.fuful.domain.Round">
+        SELECT * from tb_time where tid=#{tid} and city=#{city}
+    </select>
+
+    <select id="findAllPriceByTid" resultType="com.fuful.domain.Price">
+        SELECT * from tb_price where tid=#{tid}
+    </select>
+
+    <select id="findAllPriceByLRT" resultType="com.fuful.domain.Round">
+        SELECT * from tb_time where tid=#{tid} and city=#{city} and round=#{round}
+    </select>
+</mapper>
