@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fuful.dao.OrderDao">
+
+    <insert id="addOrder" parameterType="com.fuful.domain.Order">
+      insert into tb_order
+      values (#{Order.oid},#{Order.ordertime},#{Order.total},#{Order.state},#{Order.address},#{Order.name},#{Order.telephone},#{Order.user.uid});
+
+    </insert>
+
+    <select id="findAllOrders" resultType="com.fuful.domain.Order">
+        select * from tb_order where uid=#{uid}
+    </select>
+
+    <select id="findOrderItemByOid" resultType="com.fuful.domain.OrderProductDetail">
+        select i.count,i.subtotal,p.picture,p.bookName,p.price from tb_orderitem i,tb_book p where i.pid=p.ID and i.oid=#{oid}
+    </select>
+
+    <update id="UpdateOrderState">
+        update  tb_order set state=1 where oid=#{oid}
+    </update>
+</mapper>
