@@ -66,16 +66,16 @@ font {
 							</div>
 						</div>
 						<div class="form-group">
-							<label for="inputPassword3" class="col-sm-2 control-label">密码</label>
+							<label for="inputPassword" class="col-sm-2 control-label">密码</label>
 							<div class="col-sm-6"> 
-								<input type="password" class="form-control" id="inputPassword3" name="password"
+								<input type="password" class="form-control" id="inputPassword" name="password"
 									placeholder="请输入密码">
 							</div>
 						</div>
 						<div class="form-group">
-							<label for="inputPassword3" class="col-sm-2 control-label">验证码</label>
+							<label for="checkcode" class="col-sm-2 control-label">验证码</label>
 							<div class="col-sm-3">
-								<input type="text" class="form-control" id="inputPassword3" name="checkCode"
+								<input type="text" class="form-control" id="checkcode" name="checkCode"
 									placeholder="请输入验证码">
 							</div>
 							<div class="col-sm-3">
