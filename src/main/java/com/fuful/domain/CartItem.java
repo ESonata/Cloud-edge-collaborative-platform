@@ -12,6 +12,16 @@ public class CartItem {
 	private String seat;
 	private int roundID;
 
+	public String getRound_id() {
+		return round_id;
+	}
+
+	public void setRound_id(String round_id) {
+		this.round_id = round_id;
+	}
+
+	private String round_id;
+
 	public int getRoundID() {
 		return roundID;
 	}
