@@ -20,6 +20,7 @@ import java.util.Random;
  * 
  * 
  */
+
 public class CheckImgServlet extends HttpServlet {
 
 	// 集合中保存所有成语

@@ -17,4 +17,5 @@ public interface OrderDao {
    public List<Order> findAllOrders(@Param("uid") String uid);
    public List<OrderProductDetail> findOrderItemByOid(@Param("oid") String oid);
    public int UpdateOrderState(@Param("oid") String oid);
+   public int UpdateOrderAdrr(@Param("Order") Order order);
 }

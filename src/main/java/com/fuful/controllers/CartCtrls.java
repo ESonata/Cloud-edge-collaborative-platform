@@ -48,26 +48,8 @@ public class .CartCtrls {
 
         String seat=request.getParameter("seatlog");
 
-//        String [] seatlog  =seat.split(",");
-//       List<String> row=new ArrayList<>();
-//       List<String> col=new ArrayList<>();int i=0;
-//        for(String p:seatlog){
-//            if(i%2==0){
-//                row.add(p);
-//            }
-//            else
-//            {
-//                col.add(p);
-//            }
-//            i++;
-//        }
-//        for(int j=0;j<row.size();j++){
-//            String s_row=row.get(j);
-//            String s_col=col.get(j);
-//            System.out.println(roundID+" s_row="+s_row+" s_col"+s_col);
-//            int res=ticketService.addSeatLog(roundID,Integer.parseInt(s_row),Integer.parseInt(s_col));
-//        }
-//
+
+
         CartItem item=new CartItem();
         item.setProduct(product);
         item.setBuyNum(buyNum);
@@ -98,6 +80,7 @@ public class .CartCtrls {
 //			如果购物车中已经存在该商品，合并
         Map<String,CartItem> cartItems=cart.getCartItems();
         round_id=round_id+request.getParameter("price");
+        item.setRound_id(round_id);
         double  newsubtotal=0.0;
         if(cartItems.containsKey(round_id))
         {
@@ -106,7 +89,6 @@ public class .CartCtrls {
             int oldbuyNum=carItem.getBuyNum();
             oldbuyNum+=buyNum;
             carItem.setBuyNum(oldbuyNum);
-
             cart.setCartItems(cartItems);
 //				修改小记
             double oldsubtotal=carItem.getSubtotal();
@@ -178,6 +160,8 @@ public class .CartCtrls {
         //8、private User user;//该订单属于哪个用户
         order.setUser(user);
 
+        order.setSend(0);
+        order.setCancel(0);
         List<SeatLog> seatLogList=new ArrayList<>();
 
         //9、该订单中有多少订单项List<OrderItem> orderItems = new ArrayList<OrderItem>();
@@ -250,6 +234,39 @@ public class .CartCtrls {
         //页面跳转
 
        return "redirect:/front/order_info.jsp";
+    }
+
+
+
+    @RequestMapping(value = "/ProductDeleteCart",method = GET)
+    public void ProductDeleteCart(HttpServletRequest request,HttpServletResponse response) throws IOException {
+        String pid=request.getParameter("pid");
+
+        HttpSession session=request.getSession();
+        Cart cart=(Cart)session.getAttribute("cart");
+        if(cart!=null)
+        {
+            Map<String,CartItem> cartItems=cart.getCartItems();
+            cart.setTotal(cart.getTotal()-cartItems.get(pid).getSubtotal());
+            cartItems.remove(pid);
+            cart.setCartItems(cartItems);
+            //	需要修改总价
+
+        }
+
+        session.setAttribute("cart", cart);
+
+        response.sendRedirect(request.getContextPath()+"/front/cart.jsp");
+    }
+
+
+    @RequestMapping(value = "/ProductClearCart",method = GET)
+    public void ProductClearCart(HttpServletRequest request,HttpServletResponse response) throws IOException {
+        HttpSession session=request.getSession();
+
+        session.removeAttribute("cart");
+
+        response.sendRedirect(request.getContextPath()+"/front/cart.jsp");
     }
 }
 
