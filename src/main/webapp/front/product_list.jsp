@@ -3,15 +3,16 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@page isELIgnored="false" %>
 <!DOCTYPE html>
-<base href="http://localhost:8080/front/">
+<base href="http://localhost:8020/front/">
 <html>
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>影票列表</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>票务列表</title>
 <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css" />
 <script src="js/jquery-1.11.3.min.js" type="text/javascript"></script>
 <script src="js/bootstrap.min.js" type="text/javascript"></script>
-<!-- 引入自定义css文件 style.css -->
+<%--<!-- 引入自定义css文件 style.
+css -->--%>
 <link rel="stylesheet" href="css/style.css" type="text/css" />
 
 <style>
@@ -28,20 +29,104 @@ body {
 </style>
 </head>
 
+
+<script type="text/javascript">
+	$(function () {
+	    var li_id="${li_id}";
+		document.getElementById(li_id).className="active";
+		var showmore="${showmoreInfo}";
+		if(showmore=="1"){
+            $("#moreInfo").attr("style","display:visible");
+        }
+    })
+</script>
+
 <body>
+
+
 
 
 	<!-- 引入header.jsp -->
 	<jsp:include page="header.jsp"></jsp:include>
 
 
+
 	<div class="row" style="width: 1210px; margin: 0 auto;">
-		<div class="col-md-12">
-			<ol class="breadcrumb" id="UIbreadcrumb">
-				<li><a href="#">首页</a></li>
-				
-			</ol>
+		<div  >
+			<%--&lt;%&ndash;<ol class="breadcrumb" id="UIbreadcrumb">&ndash;%&gt;--%>
+				<%--&lt;%&ndash;<li><a href="#">首页</a></li>&ndash;%&gt;--%>
+				<%--&lt;%&ndash;&ndash;%&gt;--%>
+			<%--&lt;%&ndash;</ol>&ndash;%&gt;--%>
+				<div style="width: 50px;margin-left: 20px">
+				   城市
+				</div>
+
+				<div style="width: 1000px;margin-top: -30px;margin-left: 100px">
+
+					<ul class="nav nav-pills">
+						<%--<li class="active">--%
+							<%--<a href="#">Home</a>--%>
+						<%--</li>--%>
+
+						<c:forEach items="${townInfoList}" var="p" varStatus="status">
+							<c:if test="${status.count<=15}">
+								<li id="${p.id}">
+									<a href="/ProductSubTypeListServlet?ID=${p.town}&currentPage=1&liId=${p.id}" onclick="outputCity()">${p.town}</a>
+								</li>
+							</c:if>
+
+
+						</c:forEach>
+
+
+						<li><a onclick="more()" style="color: inherit" id="more">更多</a></li>
+
+					</ul>
+					<ul class="nav nav-pills" style="display: none" id="moreInfo">
+						<c:forEach items="${townInfoList}" var="p" varStatus="status">
+							<c:if test="${status.count>15}">
+								<li id="${p.id}"><a href="/ProductSubTypeListServlet?ID=${p.town}&currentPage=1&liId=${p.id}&moreInfoFLag=1">${p.town}</a></li>
+								<c:if test="${status.count%15==0}">
+									<br>
+									<br>
+								</c:if>
+							</c:if>
+
+
+						</c:forEach>
+
+					</ul>
+				</div>
+
+
+				<script type="text/javascript">
+					function outputCity() {
+
+                    }
+					function more() {
+						var value=document.getElementById("moreInfo").style.display;
+	//                    alert(value)
+						if(value=='none')
+						{
+							$("#moreInfo").attr("style","display:visible");
+						}
+						else
+						{
+							$("#moreInfo").attr("style","display:none");
+						}
+					}
+			</script>
+
+
+
+
+
+
+
+
 		</div>
+
+
 		
 		
 		
@@ -80,16 +165,21 @@ body {
 		
 		<c:forEach items="${SpliteBookList }" var="pro">
 		
-			<div class="col-md-2" style="height:250px">
+			<div class="col-md-2" style="height:250px;margin-top: 50px">
 			<!-- pro.ID 图书ID  cid栏目ID -->
-				<a href="${pageContext.request.contextPath }/ProductInfoServlet?pid=${pro.ID}&cid=${cid}&currentPage=${currentPage}&typeID=${pro.typeID}">
+				<a href="/ProductInfoServlet?pid=${pro.ID}&cid=${cid}&currentPage=${currentPage}&typeID=${pro.typeID}">
 					<img src="${pro.picture}" width="170" height="170" style="display: inline-block;">
 				</a>
 				<p>
-					<a href="${pageContext.request.contextPath }/ProductInfoServlet?subtypeFlag=${subtypeid }&pid=${pro.ID}&cid=${cid}&currentPage=${currentPage}&typeID=${pro.typeID}" style='color: green'>${pro.bookName }</a>
+					<a href="/ProductInfoServlet?subtypeFlag=${subtypeid }&pid=${pro.ID}&cid=${cid}&currentPage=${currentPage}&typeID=${pro.typeID}" style='color: green'>${pro.ticketName }</a>
 				</p>
+				<c:if test="${!empty subtypeFlag }">
+					<p>
+						<font color="">场次：${pro.place}</font>
+					</p>
+				</c:if>
 				<p>
-					<font color="#FF0000">商城价：&yen;${pro.price }</font>
+					<font color="#FF0000">价格：${pro.price}起</font>
 				</p>
 			</div>
 		
@@ -102,7 +192,7 @@ body {
 	</div>
 
 <!--父栏目分页 -->
-<%--<c:if test="${empty subtypeFlag }">--%>
+<c:if test="${empty subtypeFlag }">
 	<!--分页 -->
 	<div style="width: 380px; margin: 0 auto; margin-top: 50px;">
 		<ul class="pagination" style="text-align: center; margin-top: 10px;">
@@ -155,7 +245,7 @@ body {
 		</ul>
 	</div>
 	<!-- 分页结束 -->
-<%--</c:if>--%>
+</c:if>
 
 
 
@@ -225,11 +315,11 @@ body {
 
 	<!--商品浏览记录-->
 	<div
-		style="width: 1210px; margin: 0 auto; padding: 0 9px; border: 1px solid #ddd; border-top: 2px solid #999; height: 246px;">
+		style="width: 1210px; margin: 0 auto; padding: 0 9px; border: 1px solid #ddd; border-top: 2px solid #999; height: 286px;">
 
 		<h4 style="width: 50%; float: left; font: 14px/30px 微软雅黑">浏览记录</h4>
 		<div style="width: 50%; float: right; text-align: right;">
-			<a href="">more</a>
+			<%--<a href="">more</a>--%>
 		</div>
 		<div style="clear: both;"></div>
 
@@ -238,10 +328,18 @@ body {
 			<ul style="list-style: none;">
 			
 				<c:forEach items="${historyProductList }" var="historyPro">
-					<li style="width: 150px; height: 216; float: left; margin: 0 8px 0 0; padding: 0 18px 15px; text-align: center;">
-						<img src="${historyPro.picture}" width="130px" height="130px" />
-						人尽失格
-						60元
+					<li style="width: 150px; height: 256px; float: left; margin: 0 8px 0 0; padding: 0 18px 15px; text-align: center;">
+
+						<a href="/ProductInfoServlet?pid=${historyPro.ID}&cid=${cid}&currentPage=${currentPage}&typeID=${historyPro.typeID}">
+							<img src="${historyPro.picture}" width="130px" height="130px" />"
+						</a>
+						<p>
+							<a href="/ProductInfoServlet?subtypeFlag=${subtypeid }&pid=${historyPro.ID}&cid=${cid}&currentPage=${currentPage}&typeID=${historyPro.typeID}" style='color: green'>${historyPro.ticketName }</a>
+						</p>
+
+						<p>
+							<font color="#FF0000">价格：${historyPro.price}起</font>
+						</p>
 					</li>
 				</c:forEach>
 			
