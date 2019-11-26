@@ -162,9 +162,12 @@ public class IndexCtrl {
         }
 
 
+        session.removeAttribute("li_id");
+        session.removeAttribute("showmoreInfo" );
 
         //将历史记录的集合放到域中
-        request.setAttribute("historyProductList", historyProductList);
+        session.setAttribute("historyProductList", historyProductList);
+
 
 
         List<TownInfo> townInfoList=ticketService.getTownInfoList();
@@ -286,6 +289,7 @@ public class IndexCtrl {
         }
 
 
+        System.out.println("PIDS="+pids);
         Cookie cookie_pids = new Cookie("pids",pids);
         response.addCookie(cookie_pids);
 
@@ -375,11 +379,14 @@ public class IndexCtrl {
 
         HttpSession session = request.getSession();
 
+        session.removeAttribute("showmoreInfo");
+
         if(moreInfoFlag!=null){
             session.setAttribute("showmoreInfo","1");
         }
         else
         {
+            System.out.println("ShowMoreInfo"+" 0");
             session.setAttribute("showmoreInfo","0");
         }
 
@@ -429,5 +436,45 @@ public class IndexCtrl {
 
         session.setAttribute("li_id",LiId);
         request.getRequestDispatcher("/front/product_list.jsp").forward(request, response);
+    }
+
+
+    @RequestMapping(value = "/SelectSeatsServlet",method = GET)
+    public String SelectSeatsServlet(HttpServletRequest request,HttpServletResponse response){
+        String tid=request.getParameter("pid");
+        String location=request.getParameter("location");
+        String round=request.getParameter("round");
+        String price=request.getParameter("price");
+        List<Round> roundList=ticketService.getPriceByLRT(tid,location,round);
+
+        List<SeatLog> seatLogList=ticketService.getSeatLog(roundList.get(0).getId());
+        Ticket ticketName=ticketService.findTicketInfoById(Integer.parseInt(roundList.get(0).getTid()));
+        HttpSession session=request.getSession();
+
+
+        User user= (User) session.getAttribute("user");
+        if(user==null){
+            return "redirect:/front/login.jsp";
+        }
+
+        session.setAttribute("round",roundList.get(0));
+        session.setAttribute("row",roundList.get(0).getRow());
+        session.setAttribute("col",roundList.get(0).getCol());
+        session.setAttribute("seatLogList",seatLogList);
+        session.setAttribute("price",price);
+        session.setAttribute("ticketName",ticketName.getTicketName());
+
+        return "redirect:/front/selectSeats.jsp";
+    }
+
+    @RequestMapping(value = "/GetSeatLogServlet",method = POST)
+    public void GetSeatLogServlet(HttpServletRequest request,HttpServletResponse response) throws IOException {
+        String rid=request.getParameter("rid");
+
+        List<SeatLog> seatLogList=ticketService.getSeatLog(Integer.parseInt(rid));
+        Gson gson=new Gson();
+        String json=gson.toJson(seatLogList);
+        response.setContentType("text/html;charset=UTF-8");
+        response.getWriter().write(json);
     }
 }
