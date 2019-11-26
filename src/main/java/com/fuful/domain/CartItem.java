@@ -1,5 +1,7 @@
 package com.fuful.domain;
 
+import java.util.List;
+
 public class CartItem {
 
 	private Ticket product;
@@ -7,6 +9,24 @@ public class CartItem {
 	private double subtotal;//商品的小记
 	private String location;
 	private String round;
+	private String seat;
+	private int roundID;
+
+	public int getRoundID() {
+		return roundID;
+	}
+
+	public void setRoundID(int roundID) {
+		this.roundID = roundID;
+	}
+
+	public String getSeat() {
+		return seat;
+	}
+
+	public void setSeat(String seat) {
+		this.seat = seat;
+	}
 
 	public String getLocation() {
 		return location;

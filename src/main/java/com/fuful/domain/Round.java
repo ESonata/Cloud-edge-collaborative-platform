@@ -8,6 +8,33 @@ public class Round {
     private String city;
     private String round;
     private String tid;
+    private int amount;
+    private int row;
+    private int col;
+
+    public int getAmount() {
+        return amount;
+    }
+
+    public void setAmount(int amount) {
+        this.amount = amount;
+    }
+
+    public int getRow() {
+        return row;
+    }
+
+    public void setRow(int row) {
+        this.row = row;
+    }
+
+    public int getCol() {
+        return col;
+    }
+
+    public void setCol(int col) {
+        this.col = col;
+    }
 
     public String getTid() {
         return tid;
