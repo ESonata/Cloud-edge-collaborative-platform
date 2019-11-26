@@ -23,7 +23,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
  * Created by SunRuiBin on 2019/11/14.
  */
 @Controller
-public class CartCtrls {
+public class .CartCtrls {
 
 
     @Autowired
