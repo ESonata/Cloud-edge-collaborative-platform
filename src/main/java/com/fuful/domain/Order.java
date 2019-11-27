@@ -25,7 +25,26 @@ public class Order {
 	private String telephone;//收货人电话
 	
 	private User user;//该订单属于哪个用户
-	
+
+	public int getCancel() {
+		return cancel;
+	}
+
+	public void setCancel(int cancel) {
+		this.cancel = cancel;
+	}
+
+	public int getSend() {
+
+		return send;
+	}
+
+	public void setSend(int send) {
+		this.send = send;
+	}
+
+	private int send;
+	private int cancel;
 	//该订单中有多少订单项
 	List<OrderItem> orderItems = new ArrayList<OrderItem>();
 	

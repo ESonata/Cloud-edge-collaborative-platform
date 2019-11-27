@@ -1,5 +1,7 @@
 package com.fuful.domain;
 
+import java.util.List;
+
 /**
  * Created by SunRuiBin on 2019/11/16.
  */
@@ -11,9 +13,56 @@ public class OrderProductDetail {
 //                map.put("price", rs.getDouble("price"));
     private int count;
     private double subtotal;
+    private String itemid;
+    private String location;
+    private String round;
+    public String getItemid() {
+        return itemid;
+    }
+
+    public void setItemid(String itemid) {
+        this.itemid = itemid;
+    }
+
     private String picture;
     private String bookName;
     private Double price;
+
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public List<SeatLog> getSeatLogList() {
+        return seatLogList;
+    }
+
+    public void setSeatLogList(List<SeatLog> seatLogList) {
+        this.seatLogList = seatLogList;
+    }
+
+    private List<SeatLog> seatLogList;
+    private String place;
+
+    public String getRound() {
+        return round;
+    }
+
+    public void setRound(String round) {
+        this.round = round;
+    }
+
+    public String getPlace() {
+        return place;
+    }
+
+    public void setPlace(String place) {
+        this.place = place;
+    }
 
     public int getCount() {
         return count;

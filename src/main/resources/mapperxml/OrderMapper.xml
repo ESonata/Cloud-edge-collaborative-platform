@@ -4,7 +4,8 @@
 
     <insert id="addOrder" parameterType="com.fuful.domain.Order">
       insert into tb_order
-      values (#{Order.oid},#{Order.ordertime},#{Order.total},#{Order.state},#{Order.address},#{Order.name},#{Order.telephone},#{Order.user.uid});
+      values (#{Order.oid},#{Order.ordertime},#{Order.total},#{Order.state},#{Order.address},#{Order.name},#{Order.telephone},#{Order.user.uid}
+      ,#{Order.send},#{Order.cancel});
 
     </insert>
 
@@ -13,10 +14,14 @@
     </select>
 
     <select id="findOrderItemByOid" resultType="com.fuful.domain.OrderProductDetail">
-        select i.count,i.subtotal,p.picture,p.bookName,p.price from tb_orderitem i,tb_book p where i.pid=p.ID and i.oid=#{oid}
+        select i.count,i.subtotal,p.picture,p.ticketName,p.price from tb_orderitem i,tb_ticket p where i.pid=p.ID and i.oid=#{oid}
     </select>
 
     <update id="UpdateOrderState">
         update  tb_order set state=1 where oid=#{oid}
+    </update>
+
+    <update id="UpdateOrderAdrr">
+        update  tb_order set address=#{Order.address},name=#{Order.name},telephone=#{Order.telephone} where oid=#{Order.oid}
     </update>
 </mapper>

@@ -9,7 +9,7 @@
 <meta name="renderer" content="webkit">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>订单管理- iBook后台管理系统</title>
+<title>订单管理- 大麦网后台管理系统</title>
 <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
 <link rel="stylesheet" type="text/css" href="css/style.css">
 <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
@@ -46,7 +46,7 @@
       <div class="container-fluid">
         <div class="navbar-header">
           <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false"> <span class="sr-only">切换导航</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
-          <a class="navbar-brand" href="/">iBookCMS</a> </div>
+          <a class="navbar-brand" href="/admin/LoginAdmin.jsp">大麦CMS</a> </div>
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
           <ul class="nav navbar-nav navbar-right">
             <li><a href="">消息 <span class="badge">1</span></a></li>
@@ -64,7 +64,7 @@
                 <li><a title="查看您的登录记录" data-toggle="modal" data-target="#seeUserLoginlog">登录记录</a></li>
               </ul>
             </li>
-            <li><a href="/Semester_Demo/ManageUserLogout" onClick="if(!confirm('是否确认退出？'))return false;">退出登录</a></li>
+            <li><a href="/ManageUserLogout" onClick="if(!confirm('是否确认退出？'))return false;">退出登录</a></li>
             <li><a data-toggle="modal" data-target="#WeChat">帮助</a></li>
           </ul>
           <form action="" method="post" class="navbar-form navbar-right" role="search">
@@ -170,7 +170,7 @@
           				var curPage=curPage;
           				/* alert("要转向的结果分页页面:"+curPage); */
           				$.post(
-          					"/Semester_Demo/QueryOrder",
+          					"/QueryOrder",
           					{"orderkeyword":orderkeyword,"curPage":curPage},
           					function(data)
           					{
@@ -201,8 +201,10 @@
                 <th><span class="glyphicon glyphicon-list"></span> <span class="visible-lg">订单编号</span></th>
                 <th class="hidden-sm"><span class="glyphicon glyphicon-tag"></span> <span class="visible-lg">订单金额</span></th>
                 <th class="hidden-sm"><span class="glyphicon glyphicon-comment"></span> <span class="visible-lg">收货人</span></th>
-                <th><span class="glyphicon glyphicon-pencil"></span> <span class="visible-lg">订单状态</span></th>
+                <th><span class="glyphicon glyphicon-pencil"></span> <span class="visible-lg">付款状态</span></th>
                 <th><span class="glyphicon glyphicon-time"></span> <span class="visible-lg">订单详情</span></th>
+                <th><span class="glyphicon glyphicon-time"></span> <span class="visible-lg">发货状态</span></th>
+                <th><span class="glyphicon glyphicon-time"></span> <span class="visible-lg">订单状态</span></th>
 
 
                 <th><span class="glyphicon glyphicon-pencil"></span> <span class="visible-lg">操作</span></th>
@@ -217,7 +219,7 @@
                 <td class="hidden-sm">${order.total }</td>
                 <td class="hidden-sm">${order.name }</td>
                 <td>
-                    ${order.state==0?"未付款":"已付款" }
+                    ${order.state==0?"等待买家付款":"买家已付款" }
                 </td>
                <td>
                  <div class="btn-group">
@@ -225,16 +227,52 @@
                      
                      <!-- data-toggle="modal" data-target="#seeorder" -->
                        查看详情
-                     
 
                    </button>
                  </div>
                  
                </td>
+                  <td>
+                          <c:if test="${order.send==0}">
+                              <a href="/sendProduct?oid=${order.oid}&curPage=${curPage}">等待发货
+                                <br>选择物流
+                              </a>
+                          </c:if>
+
+                         <c:if test="${order.send==1}">
+                             已发货<br>
+                             查看物流
+                         </c:if>
+                  </td>
+
+                  <td>
+                      <c:if test="${order.cancel==0}">
+                          <button class="btn btn-default" type="button"> 待用户更新操作</button>
+
+                      </c:if>
+
+                      <c:if test="${order.cancel==1}">
+                          <button type="submit" class="btn btn-default" style="display: inline">
+                              <%--<li><a  data-toggle="modal" data-target="#dealCancel">处理用户请求</a></li>--%>
+                              <a onclick="dealcancel('${order.oid}')">处理用户退票请求</a>
+                          </button>
+                      </c:if>
+                      <c:if test="${order.cancel==3}">
+                          <button class="btn btn-default" type="button">
+                              用户确认收货完成<br>
+                              查看详情
+                          </button>
+                      </c:if>
+
+
+
+                  </td>
+
+
 
                 <td>
                  <c:if test="${manageuser.change==1 }">
-                <a rel="${order.oid }">删除</a>
+                     <a rel="${order.oid }">删除</a>
                 </c:if>
                 </td>
 
@@ -245,6 +283,11 @@
            
            
            <script type="text/javascript">
+
+               function dealcancel() {
+
+               }
+
        		function findOrderInfoByOid(oid){
 					
 					//ajax异步访问数据
@@ -265,9 +308,26 @@
 						"<td><a target='_blank'>"+data[i].bookName+"</a></td>"+
 						"<td>￥"+data[i].price+"</td>"+
 						"<td>"+data[i].count+"</td>"+
+						"<td>"+data[i].round+"</td>"+
+						"<td>"+data[i].location+"</td>"+
 						"<td><span class='subtotal'>￥"+data[i].subtotal+"</span></td>"+
 						"</tr>";
-						
+
+
+						for(var j=0;j<data[i].seatLogList.length;j++){
+//						    console.log(data[i].seatLogList[j].row+" "+data[i].seatLogList[j].col)
+                            content+="<tr style='text-align: center;height: 50px'>"+
+                                "<td>"+
+                                "选择的座位号"+
+                                "</td>"+
+                                "<td>row:</td>"+
+                                "<td></td>"+
+                                "<td> "+data[i].seatLogList[j].row+"排</td>"+
+                                "<td>col:</td>"+
+                                "<td></td>"+
+                                "<td>"+data[i].seatLogList[j].col+"座</td>"+
+                                "</tr>";
+                        }
   					
 					}
 					
@@ -513,56 +573,16 @@
             <th>商品</th>
             <th>价格</th>
             <th>数量</th>
+              <th>场馆</th>
+              <th>场次</th>
             <th>小记</th>
           </tr>
           </thead>
           <tbody  id="showorderinfo">
-          <tr style="height: 120px">
-            <td>
 
-              <img src="images/1.png" style="width: 100px;height: 80px">
-            </td>
-            <td>2016-01-08 15:50:28</td>
-            <td>成功</td>
-            <td>成功</td>
-            <td>成功</td>
-          </tr>
-          <tr style="height: 120px">
-            <td> <img src="images/1.png" style="width: 100px;height: 80px"></td>
-            <td>2016-01-08 10:27:44</td>
-            <td>成功</td>
-            <td>成功</td>
-            <td>成功</td>
-          </tr>
-          <tr style="height: 120px">
-            <td> <img src="images/1.png" style="width: 100px;height: 80px"></td>
-            <td>2016-01-08 10:19:25</td>
-            <td>成功</td>
-            <td>成功</td>
-            <td>成功</td>
-          </tr>
-          <tr style="height: 120px">
-            <td><img src="images/1.png" style="width: 100px;height: 80px"></td>
-            <td>2016-01-06 10:35:12</td>
-            <td>成功</td>
-            <td>成功</td>
-            <td>成功</td>
-          </tr>
-          <tr style="height: 120px">
-            <td><img src="images/1.png" style="width: 100px;height: 80px"></td>
-            <td>2016-01-06 10:35:12</td>
-            <td>成功</td>
-            <td>成功</td>
-            <td>成功</td>
-          </tr>
-          <tr style="height: 120px">
-            <td><img src="images/1.png" style="width: 100px;height: 80px"></td>
-            <td>2016-01-06 10:35:12</td>
-            <td>成功</td>
-            <td>成功</td>
-            <td>成功</td>
-          </tr>
+
           </tbody>
+
         </table>
       </div>
       <div class="modal-footer">

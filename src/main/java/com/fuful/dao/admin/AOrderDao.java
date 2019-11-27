@@ -2,6 +2,8 @@ package com.fuful.dao.admin;
 
 import com.fuful.domain.Order;
 import com.fuful.domain.OrderProductDetail;
+import com.fuful.domain.Round;
+import com.fuful.domain.SeatLog;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -16,5 +18,7 @@ public interface  AOrderDao {
     public List<Order> findAllOrder();
     public List<OrderProductDetail> findOrderInfoByOid(@Param("oid") String oid);
     public boolean DeleteOrder(@Param("oid") String oid);
-
+    public List<Order> findAllSearchOrder(@Param("keyword") String name);
+    public List<SeatLog> findSeatLogByItemid(@Param("itemid") String itemid);
+    public Round findRoundInfoByRid(@Param("rid") int rid);
 }

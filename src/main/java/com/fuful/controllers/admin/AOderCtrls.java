@@ -2,6 +2,7 @@ package com.fuful.controllers.admin;
 
 import com.fuful.dao.admin.AOrderDao;
 import com.fuful.domain.Order;
+import com.fuful.domain.OrderProductDetail;
 import com.fuful.service.admin.AOrderService;
 import com.github.pagehelper.PageInfo;
 import com.google.gson.Gson;
@@ -62,12 +63,11 @@ public class AOderCtrls {
 
 
         System.out.println("找到每个订单的订单项信息oid"+oid);
-        List<Map<String,Object>>  mapList=aOrderService.findOrderInfoByOid(oid);
+        List<OrderProductDetail>  mapList=aOrderService.findOrderInfoByOid(oid);
 
         Gson gson=new Gson();
         String json=gson.toJson(mapList);
         System.out.println(json);
-
 
 
         response.setContentType("text/html;charset=UTF-8");
@@ -98,6 +98,61 @@ public class AOderCtrls {
 
         response.setContentType("text/html;charset=UTF-8");
         response.getWriter().write(json);
+
+    }
+
+    @RequestMapping(value = "/QueryOrder",method = POST)
+    public void QueryOrder(HttpServletRequest request,HttpServletResponse response) throws IOException {
+        String orderkeyword=request.getParameter("orderkeyword");
+        if(orderkeyword.length()==0)
+        {
+            orderkeyword=(String) request.getSession().getAttribute("currentkeyword");
+        }
+        int page;
+
+        if(request.getParameter("curPage")==null)
+        {
+            page=1;
+        }
+        else
+        {
+            page=Integer.parseInt(request.getParameter("curPage"));
+        }
+
+       PageInfo<Order>  orderPageInfo=aOrderService.getSearchOrderResult(page,6,orderkeyword);
+
+        HttpSession session = request.getSession();
+        session.setAttribute("spliteOrderInfoplist", orderPageInfo.getList());
+        session.setAttribute("curPage", orderPageInfo.getPageNum());
+        session.setAttribute("totalPage", orderPageInfo.getPages());
+        session.setAttribute("totalCount", orderPageInfo.getTotal());
+        session.setAttribute("currentkeyword", orderkeyword);
+        session.setAttribute("ordersearchflag", "true");
+
+        String message="success";
+        Gson gson=new Gson();
+        String json=gson.toJson(message);
+        System.out.println(json);
+        response.setContentType("text/html;charset=UTF-8");
+
+        response.getWriter().write(json);
+
+    }
+
+    @RequestMapping(value = "/sendProduct",method = GET)
+    public void sendProduct(HttpServletRequest request,HttpServletResponse response){
+        String oid=request.getParameter("oid");
+        int page;
+
+        if(request.getParameter("curPage")==null)
+        {
+            page=1;
+        }
+        else
+        {
+            page=Integer.parseInt(request.getParameter("curPage"));
+        }
+        //修改订单状态
 
     }
 
