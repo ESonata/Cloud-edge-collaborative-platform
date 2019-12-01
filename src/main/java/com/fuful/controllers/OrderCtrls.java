@@ -3,6 +3,7 @@ package com.fuful.controllers;
 import com.fuful.domain.*;
 import com.fuful.service.OrderService;
 import com.fuful.service.TicketService;
+import com.google.gson.Gson;
 import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -128,5 +129,23 @@ public class OrderCtrls {
         String orderid = request.getParameter("oid");
         session.setAttribute("oid",orderid);
         return "redirect:/front/ChoiceBank.jsp";
+    }
+
+
+    @RequestMapping(value = "/ConfirmOrder",method = POST)
+    public void ConfirmOrder(HttpServletRequest request,HttpServletResponse response) throws IOException {
+
+        String oid=request.getParameter("orderId");
+        String password=request.getParameter("password");
+
+        int res=orderService.updateOrderConfirm(oid);
+
+        String message="success";
+        Gson gson=new Gson();
+        String json=gson.toJson(message);
+        response.setContentType("text/html;charset=UTF-8");
+        response.getWriter().write(json);
+
+
     }
 }
