@@ -23,9 +23,7 @@ import java.util.*;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
-/**
- * Created by SunRuiBin on 2019/11/14.
- */
+
 @Controller
 public class IndexCtrl {
 
